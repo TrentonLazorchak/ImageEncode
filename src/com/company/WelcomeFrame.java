@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 
 public class WelcomeFrame extends JFrame {
     public WelcomeFrame(String title) {
@@ -65,6 +66,7 @@ public class WelcomeFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // Set welcome screen to not visible
                 setVisible(false);
+                dispose();
 
                 // Create Encode Screen
                 JFrame encodeScreen = new EncodeScreen("Encode");
@@ -80,6 +82,7 @@ public class WelcomeFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // Set welcome screen to not visible
                 setVisible(false);
+                dispose();
 
                 // Create decode screen
                 JFrame decodeScreen = new DecodeScreen("Encode");
@@ -95,6 +98,7 @@ public class WelcomeFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // Set welcome screen to not visible
                 setVisible(false);
+                dispose();
 
                 // Create replay screen
                 JFrame replayScreen = new ReplayScreen("Encode");
