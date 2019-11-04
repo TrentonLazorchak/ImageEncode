@@ -28,7 +28,6 @@ public class WelcomeFrame extends JFrame {
         gc.anchor = GridBagConstraints.PAGE_END;
         gc.weighty = 1.0;
         gc.weightx = 1.0;
-        //gc.weighty = 0;
 
         gc.gridx = 1;
         gc.gridy = 0;
@@ -85,7 +84,7 @@ public class WelcomeFrame extends JFrame {
                 dispose();
 
                 // Create decode screen
-                JFrame decodeScreen = new DecodeScreen("Encode");
+                JFrame decodeScreen = new DecodeScreen("Decode");
                 decodeScreen.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 decodeScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 decodeScreen.setVisible(true);
