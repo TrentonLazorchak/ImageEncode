@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
 
 public class WelcomeFrame extends JFrame {
     public WelcomeFrame(String title) {
@@ -59,6 +58,7 @@ public class WelcomeFrame extends JFrame {
         add(credit, gc);
 
         // Add behaviors
+        // Encode button pressed
         encode.addActionListener(new ActionListener() {
 
             @Override
@@ -75,6 +75,7 @@ public class WelcomeFrame extends JFrame {
             }
         });
 
+        // Decode button pressed
         decode.addActionListener(new ActionListener() {
 
             @Override
@@ -91,6 +92,7 @@ public class WelcomeFrame extends JFrame {
             }
         });
 
+        // Replay button pressed
         replay.addActionListener(new ActionListener() {
 
             @Override

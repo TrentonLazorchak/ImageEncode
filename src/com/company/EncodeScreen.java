@@ -57,12 +57,38 @@ public class EncodeScreen extends JFrame {
         gc.gridy = 1;
         add(methodBox, gc);
 
+        //// Buttom row buttons /////////////////////////////////////////////
+        // Create buttons
+        JButton back = new JButton("BACK");
+
+        gc.gridx = 0;
+        gc.gridy = 2;
+        add(back, gc);
+
+
+        // Add behaviors
         // If upload button pressed
         upload.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO: Uplaod image and ensure it is correct name (Lanre)
                 System.out.println("File Upload Pressed");
+            }
+        });
+
+        // If back button pressed
+        back.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Remove encode screen
+                setVisible(false);
+                dispose();
+
+                // Open welcome screen
+                JFrame welcome = new WelcomeFrame("ImageEncoder");
+                welcome.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                welcome.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                welcome.setVisible(true);
             }
         });
 
