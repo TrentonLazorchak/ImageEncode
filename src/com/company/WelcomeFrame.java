@@ -63,15 +63,15 @@ public class WelcomeFrame extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Set welcome screen to not visible
-                setVisible(false);
-                dispose();
-
                 // Create Encode Screen
                 JFrame encodeScreen = new EncodeScreen("Encode");
                 encodeScreen.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 encodeScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 encodeScreen.setVisible(true);
+
+                // Close welcome screen
+                setVisible(false);
+                dispose();
             }
         });
 
@@ -80,15 +80,15 @@ public class WelcomeFrame extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Set welcome screen to not visible
-                setVisible(false);
-                dispose();
-
                 // Create decode screen
                 JFrame decodeScreen = new DecodeScreen("Decode");
                 decodeScreen.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 decodeScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 decodeScreen.setVisible(true);
+
+                // Close welcome screen
+                setVisible(false);
+                dispose();
             }
         });
 
@@ -97,15 +97,15 @@ public class WelcomeFrame extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Set welcome screen to not visible
-                setVisible(false);
-                dispose();
-
                 // Create replay screen
-                JFrame replayScreen = new ReplayScreen("Encode");
+                JFrame replayScreen = new ReplayScreen("Replay");
                 replayScreen.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 replayScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 replayScreen.setVisible(true);
+
+                // Close welcome screen
+                setVisible(false);
+                dispose();
             }
         });
     }
