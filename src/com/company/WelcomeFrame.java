@@ -19,7 +19,7 @@ public class WelcomeFrame extends JFrame {
         JButton encode = new JButton("Encode");
         JButton decode = new JButton("Decode");
         JButton replay = new JButton("Replay");
-        JLabel credit = new JLabel("                                Created by Trenton Lazorchak, Jake Howell, and Olanrewaju Arbisala.");
+        JLabel credit = new JLabel("Created by Trenton Lazorchak, Jake Howell, and Olanrewaju Arbisala.");
         credit.setFont(new Font("Times New Roman", Font.PLAIN, 12));
 
         // add Swing components to the gui
@@ -54,7 +54,7 @@ public class WelcomeFrame extends JFrame {
         //// Credits ////////////////////////////////////////
         gc.anchor = GridBagConstraints.PAGE_END;
         gc.gridx = 1;
-        gc.gridy = 3;
+        gc.gridy = 2;
         add(credit, gc);
 
         // Add behaviors
@@ -65,6 +65,7 @@ public class WelcomeFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // Create Encode Screen
                 JFrame encodeScreen = new EncodeScreen("Encode");
+                encodeScreen.setResizable(false);
                 encodeScreen.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 encodeScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 encodeScreen.setVisible(true);
@@ -82,6 +83,7 @@ public class WelcomeFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // Create decode screen
                 JFrame decodeScreen = new DecodeScreen("Decode");
+                decodeScreen.setResizable(false);
                 decodeScreen.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 decodeScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 decodeScreen.setVisible(true);
@@ -99,6 +101,7 @@ public class WelcomeFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // Create replay screen
                 JFrame replayScreen = new ReplayScreen("Replay");
+                replayScreen.setResizable(false);
                 replayScreen.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 replayScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 replayScreen.setVisible(true);

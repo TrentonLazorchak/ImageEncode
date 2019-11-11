@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class EncodeScreen extends JFrame {
     public EncodeScreen(String title) {
@@ -164,10 +165,13 @@ public class EncodeScreen extends JFrame {
                 // perform encoding backend
 
                 // Create encode result screen
+
                 JFrame resultScreen = new EncodeResultScreen("Encode Result");
+                resultScreen.setResizable(false);
                 resultScreen.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 resultScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 resultScreen.setVisible(true);
+
 
                 // Close welcome screen
                 setVisible(false);

@@ -10,6 +10,7 @@ public class Main {
             @Override
             public void run() {
                 JFrame welcome = new WelcomeFrame("ImageEncoder");
+                welcome.setResizable(false);
                 welcome.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 welcome.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 welcome.setVisible(true);
