@@ -27,8 +27,7 @@ public class EncodeResultScreen extends JFrame {
 
         // image
         // TODO: Take the stored value of the encoded image and substitute below for filePath
-        // TODO: this String needs to be put into a resources file and is accessed upon this screen being
-        //  created (should not be created here)
+        // TODO: this String needs to be public and static in encoding backend or have accessor method
         String filePath = "/Users/trentonlazorchak/Desktop/PrototypeUIEncoder/sampleImg.jpg";
         ImageIcon image = new ImageIcon(filePath);
         JLabel img = new JLabel(image);

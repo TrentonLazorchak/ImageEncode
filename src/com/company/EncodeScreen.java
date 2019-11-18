@@ -1,18 +1,27 @@
 package com.company;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
 public class EncodeScreen extends JFrame {
+    public static String name;
+    public static String filePath;
+    public static String imgPath;
+    public static String msg;
+
     public EncodeScreen(String title) {
         super(title);
 
         // set layout manager
         setLayout(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
+
+        final String fileDefault = "<File Name>";
+        final String messageDefault = "<Message>";
 
         // Default font
         Font font = new Font("Times New Roman",Font.PLAIN,25);
@@ -21,8 +30,15 @@ public class EncodeScreen extends JFrame {
         // create swing components
         JLabel uploadLabel = new JLabel("Upload Base Image:");
         uploadLabel.setFont(font);
-        JTextField fileName = new JTextField("                                                   <File Name>                                                    ");
+
+        JTextField fileName = new JTextField(fileDefault);
+        Dimension dim = new Dimension(1000,50);
+        fileName.setMinimumSize(dim);
+        fileName.setPreferredSize(dim);
+        fileName.setMaximumSize(dim);
         fileName.setEditable(false);
+        fileName.setHorizontalAlignment(JTextField.CENTER);
+
         JButton upload = new JButton("UPLOAD");
 
         gc.weightx = 1;
@@ -55,8 +71,8 @@ public class EncodeScreen extends JFrame {
         gc.gridy = 0;
         add(selectMethod, gc);
 
-        gc.anchor = GridBagConstraints.LAST_LINE_END;
-        gc.gridx = 0;
+        gc.anchor = GridBagConstraints.LAST_LINE_START;
+        gc.gridx = 1;
         gc.gridy = 0;
         add(methodBox, gc);
 
@@ -82,7 +98,7 @@ public class EncodeScreen extends JFrame {
         JTextArea message = new JTextArea(20,35);
         message.setWrapStyleWord(true);
         message.setLineWrap(true);
-        message.setText("<MESSAGE>");
+        message.setText(messageDefault);
         JScrollPane scrollPane = new JScrollPane(message);
         gc.fill = GridBagConstraints.HORIZONTAL;
         gc.anchor = GridBagConstraints.CENTER;
@@ -94,7 +110,13 @@ public class EncodeScreen extends JFrame {
 
         // Image items
         JButton upl = new JButton("UPLOAD");
-        JTextField imgName = new JTextField("                                          <File Name>                                          ");
+        String file2 = fileDefault;
+        JTextField imgName = new JTextField(file2);
+        Dimension dim2 = new Dimension(750, 40);
+        imgName.setMinimumSize(dim2);
+        imgName.setPreferredSize(dim2);
+        imgName.setMaximumSize(dim2);
+        imgName.setHorizontalAlignment(JTextField.CENTER);
         imgName.setEditable(false);
 
         // Cancel button
@@ -118,7 +140,7 @@ public class EncodeScreen extends JFrame {
         gc.gridy = 2;
         add(back, gc);
 
-        gc.anchor = GridBagConstraints.PAGE_END;
+        gc.anchor = GridBagConstraints.LAST_LINE_START;
         gc.gridx = 2;
         gc.gridy = 2;
         add(reset, gc);
@@ -133,10 +155,52 @@ public class EncodeScreen extends JFrame {
         upload.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: Upload image and ensure it is correct name (Lanre)
-                System.out.println("File Upload Pressed");
+                JFileChooser my = new JFileChooser();
+                my.setAcceptAllFileFilterUsed(false);
+                FileNameExtensionFilter correct = new FileNameExtensionFilter("png or jpg", "jpg", "png");
+                my.addChoosableFileFilter(correct);
+                my.setCurrentDirectory(new java.io.File("."));
+                my.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+                my.setAcceptAllFileFilterUsed(false);
+
+                if(my.showOpenDialog(null)==JFileChooser.APPROVE_OPTION)
+                {
+                    // Display the name of the file
+                    name = my.getName(my.getSelectedFile());
+                    fileName.setText(name);
+
+                    // Store the path to the file to be used for the encoder
+                    filePath =my.getSelectedFile().getAbsolutePath();
+                }
+                revalidate();
             }
         });
+
+        // If encode message upload button is pressed
+        upl.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser my = new JFileChooser();
+                my.setAcceptAllFileFilterUsed(false);
+                FileNameExtensionFilter correct = new FileNameExtensionFilter("png or jpg", "jpg", "png");
+                my.addChoosableFileFilter(correct);
+                my.setCurrentDirectory(new java.io.File("."));
+                my.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+                my.setAcceptAllFileFilterUsed(false);
+
+                if(my.showOpenDialog(null)==JFileChooser.APPROVE_OPTION)
+                {
+                    // Display the name of the file
+                    name = my.getName(my.getSelectedFile());
+                    imgName.setText(name);
+
+                    // Store the path to the file to be used for the encoder
+                    imgPath =my.getSelectedFile().getAbsolutePath();
+                }
+                revalidate();
+            }
+        });
+
 
         // If back button pressed
         back.addActionListener(new ActionListener() {
@@ -158,14 +222,34 @@ public class EncodeScreen extends JFrame {
         start.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: store base image
+                // TODO: display a JLabel representing the error
+                if(filePath.equals(fileDefault)) {
+                    System.out.println("ERROR: NO BASE IMAGE SELECTED!");
+                    return;
+                } else if (imageRadio.isSelected() && imgPath.equals(fileDefault)) {
+                    System.out.println("ERROR: NO IMAGE SELECTED!");
+                    return;
+                } else if (textRadio.isSelected() && message.getText().equals(messageDefault)) {
+                    System.out.println("ERROR: NO MESSAGE ENTERED!");
+                    return;
+                }
 
-                // TODO: store message if message radio selected, else store second image
+                // if the textRadio is selected, store the message for encoding, TODO: display JLabel for error
+                if(textRadio.isSelected()) {
+                    msg = message.getText();
+                    if(msg.length() > 500) {
+                        System.out.println("ERROR: MESSAGE OVER 500 CHARACTERS!");
+                        return;
+                    }
+                    if(msg.isEmpty()) {
+                        System.out.println("ERROR: MESSAGE EMPTY!");
+                        return;
+                    }
+                }
 
-                // perform encoding backend
+                // TODO: perform encoding backend
 
                 // Create encode result screen
-
                 JFrame resultScreen = new EncodeResultScreen("Encode Result");
                 resultScreen.setResizable(false);
                 resultScreen.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -183,6 +267,9 @@ public class EncodeScreen extends JFrame {
         imageRadio.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // reset message to default
+                message.setText(messageDefault);
+
                 // remove message items
                 remove(scrollPane);
 
@@ -202,6 +289,10 @@ public class EncodeScreen extends JFrame {
         textRadio.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // reset img path and name to default
+                imgName.setText(fileDefault);
+                imgPath = fileDefault;
+
                 // remove image items
                 remove(upl);
                 remove(imgName);
