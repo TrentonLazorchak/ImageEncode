@@ -126,6 +126,16 @@ public class EncodeScreen extends JFrame {
         gc.gridy = 1;
         add(cancel, gc);
 
+        // Error label (starts invisible)
+        JLabel error = new JLabel("ERROR");
+        error.setFont(new Font("Times New Roman",Font.PLAIN,25));
+        error.setForeground(Color.RED);
+        error.setVisible(false);
+        gc.anchor = GridBagConstraints.PAGE_END;
+        gc.gridx = 1;
+        gc.gridy = 1;
+        add(error, gc);
+
         //// Buttom row buttons /////////////////////////////////////////////
         // Create buttons
         JButton back = new JButton("BACK");
@@ -223,14 +233,23 @@ public class EncodeScreen extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO: display a JLabel representing the error
-                if(filePath.equals(fileDefault)) {
+                if(fileName.getText().equals(fileDefault)) {
                     System.out.println("ERROR: NO BASE IMAGE SELECTED!");
+                    error.setText("ERROR: NO BASE IMAGE SELECTED!");
+                    error.setVisible(true);
+                    revalidate();
                     return;
-                } else if (imageRadio.isSelected() && imgPath.equals(fileDefault)) {
+                } else if (imageRadio.isSelected() && imgName.getText().equals(fileDefault)) {
                     System.out.println("ERROR: NO IMAGE SELECTED!");
+                    error.setText("ERROR: NO IMAGE SELECTED!");
+                    error.setVisible(true);
+                    revalidate();
                     return;
                 } else if (textRadio.isSelected() && message.getText().equals(messageDefault)) {
                     System.out.println("ERROR: NO MESSAGE ENTERED!");
+                    error.setText("ERROR: NO MESSAGE ENTERED!");
+                    error.setVisible(true);
+                    revalidate();
                     return;
                 }
 
@@ -239,9 +258,15 @@ public class EncodeScreen extends JFrame {
                     msg = message.getText();
                     if(msg.length() > 500) {
                         System.out.println("ERROR: MESSAGE OVER 500 CHARACTERS!");
+                        error.setText("ERROR: MESSAGE OVER 500 CHARACTERS!");
+                        error.setVisible(true);
+                        revalidate();
                         return;
                     } else if(msg.isEmpty()) {
                         System.out.println("ERROR: MESSAGE EMPTY!");
+                        error.setText("ERROR: MESSAGE EMPTY!");
+                        error.setVisible(true);
+                        revalidate();
                         return;
                     }
                 }
@@ -266,6 +291,9 @@ public class EncodeScreen extends JFrame {
         imageRadio.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // set error visible to false
+                error.setVisible(false);
+
                 // reset message to default
                 message.setText(messageDefault);
 
@@ -288,6 +316,9 @@ public class EncodeScreen extends JFrame {
         textRadio.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // error to invisible
+                error.setVisible(false);
+
                 // reset img path and name to default
                 imgName.setText(fileDefault);
                 imgPath = fileDefault;
