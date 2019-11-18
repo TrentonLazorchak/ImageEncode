@@ -240,8 +240,7 @@ public class EncodeScreen extends JFrame {
                     if(msg.length() > 500) {
                         System.out.println("ERROR: MESSAGE OVER 500 CHARACTERS!");
                         return;
-                    }
-                    if(msg.isEmpty()) {
+                    } else if(msg.isEmpty()) {
                         System.out.println("ERROR: MESSAGE EMPTY!");
                         return;
                     }
