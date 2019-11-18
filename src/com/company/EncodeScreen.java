@@ -247,7 +247,7 @@ public class EncodeScreen extends JFrame {
                     }
                 }
 
-                // TODO: perform encoding backend
+                // TODO: perform encoding backend (Jake)
 
                 // Create encode result screen
                 JFrame resultScreen = new EncodeResultScreen("Encode Result");
