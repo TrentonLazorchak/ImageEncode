@@ -128,7 +128,7 @@ public class EncodeScreen extends JFrame {
 
         // Error label (starts invisible)
         JLabel error = new JLabel("ERROR");
-        error.setFont(new Font("Times New Roman",Font.PLAIN,25));
+        error.setFont(font);
         error.setForeground(Color.RED);
         error.setVisible(false);
         gc.anchor = GridBagConstraints.PAGE_END;
