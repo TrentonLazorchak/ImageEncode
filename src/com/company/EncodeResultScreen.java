@@ -2,10 +2,13 @@ package com.company;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.awt.Image;
@@ -35,9 +38,9 @@ public class EncodeResultScreen extends JFrame {
         // image
         // TODO: Take the stored value of the encoded image and substitute below for filePath
         // TODO: this String needs to be public and static in encoding backend or have accessor method
-        String filePath = "/Users/trentonlazorchak/Desktop/PrototypeUIEncoder/sampleImg.jpg";
+        String imgPath = "/Users/trentonlazorchak/Desktop/PrototypeUIEncoder/sampleImg.jpg";
 
-        imageIcon = new ImageIcon(filePath);
+        imageIcon = new ImageIcon(imgPath);
         Image image = imageIcon.getImage(); // transform it
         Image newImg = image.getScaledInstance(width, height,  Image.SCALE_SMOOTH); // scale it the smooth way
         imageIcon = new ImageIcon(newImg);  // transform it back
@@ -106,9 +109,13 @@ public class EncodeResultScreen extends JFrame {
                 // remove existing img
                 remove(img);
 
-                // adjust height and width
-                height += 50;
-                width += 50;
+                if(width >= 1000 || height >= 1000) {
+                    return;
+                } else {
+                    // adjust height and width
+                    height += 50;
+                    width += 50;
+                }
 
                 // rescale img
                 imageIcon = new ImageIcon(image.getScaledInstance(width, height,  Image.SCALE_SMOOTH));
@@ -166,7 +173,32 @@ public class EncodeResultScreen extends JFrame {
         save.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // create img to save
+                Image img = imageIcon.getImage();
+
+                BufferedImage bi = new BufferedImage(img.getWidth(null),img.getHeight(null),BufferedImage.TYPE_4BYTE_ABGR);
+
+                Graphics2D g2 = bi.createGraphics();
+                g2.drawImage(img, 0, 0, null);
+                g2.dispose();
+
                 // TODO: open a file select screen so the user can select where to save the file to
+                //Creating the save option
+                JFileChooser chooser = new JFileChooser();
+                chooser.setFileFilter(new FileNameExtensionFilter("png", "png"));
+                if(chooser.showSaveDialog(null)== JFileChooser.APPROVE_OPTION){
+                    File file = chooser.getSelectedFile();
+
+                    try{
+                        ImageIO.write(bi, "png", new File(file.getAbsolutePath()));
+                    } catch (IOException ex){
+                        System.out.println("Failed to save image");
+                    }
+                } else {
+                    System.out.println("no file chosen");
+                }
+                String fileLoc = chooser.getSelectedFile().getAbsolutePath();       //The Location of the file
+                System.out.println(fileLoc);
 
                 // TODO: also give option to save image so it can be replayed
             }

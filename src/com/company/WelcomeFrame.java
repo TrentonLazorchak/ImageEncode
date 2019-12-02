@@ -13,14 +13,29 @@ public class WelcomeFrame extends JFrame {
         setLayout(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
 
+        // fonts
+        Font titleFont = new Font("Times New Roman", Font.PLAIN, 200);
+        Font btnFont = new Font("Times New Roman", Font.PLAIN, 50);
+        Font creditFont = new Font("Times New Roman", Font.PLAIN, 12);
+
+        // sizes
+        //Dimension titleSize = new Dimension(2000,250);
+
         // create Swing components
-        JLabel imageEncoder = new JLabel("Image Encoder");
-        imageEncoder.setFont(new Font("Times New Roman",Font.PLAIN,100));
+        JLabel imageEncoder = new JLabel("<html><center>Image<p>Encoder</center></html>");
+        imageEncoder.setFont(titleFont);
+
         JButton encode = new JButton("Encode");
+        encode.setFont(btnFont);
+
         JButton decode = new JButton("Decode");
+        decode.setFont(btnFont);
+
         JButton replay = new JButton("Replay");
-        JLabel credit = new JLabel("Created by Trenton Lazorchak, Jake Howell, and Olanrewaju Arbisala.");
-        credit.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+        replay.setFont(btnFont);
+
+        JLabel credit = new JLabel("<html><center>Created by Trenton Lazorchak, Jake Howell, and Olanrewaju Arbisala.</center></html>");
+        credit.setFont(creditFont);
 
         // add Swing components to the gui
         //// Title /////////////////////////////////////////
@@ -33,8 +48,9 @@ public class WelcomeFrame extends JFrame {
         add(imageEncoder, gc);
 
         //// Buttons ///////////////////////////////////////
-        gc.ipadx = 100;
-        gc.ipady = 50;
+        gc.ipadx = 200;
+        gc.ipady = 150;
+        gc.weightx = 0;
 
         gc.anchor = GridBagConstraints.LAST_LINE_END;
         gc.gridx = 0;
