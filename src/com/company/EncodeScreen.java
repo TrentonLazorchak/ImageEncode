@@ -1,9 +1,6 @@
 package com.company;
 
 import javax.swing.*;
-import java.awt.event.KeyEvent;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -11,7 +8,6 @@ import javax.swing.text.DefaultStyledDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 public class EncodeScreen extends JFrame {
     public static String name;
@@ -40,7 +36,6 @@ public class EncodeScreen extends JFrame {
         // create swing components
         JLabel uploadLabel = new JLabel("Upload Base Image:");
         uploadLabel.setFont(font);
-
 
         JButton upload = new JButton("UPLOAD");
 
@@ -364,7 +359,7 @@ public class EncodeScreen extends JFrame {
                 resultScreen.setVisible(true);
 
 
-                // Close welcome screen
+                // Close encode screen
                 setVisible(false);
                 dispose();
             }
