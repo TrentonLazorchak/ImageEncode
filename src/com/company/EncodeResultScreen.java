@@ -7,10 +7,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.awt.Image;
 
 public class EncodeResultScreen extends JFrame {
@@ -36,11 +34,16 @@ public class EncodeResultScreen extends JFrame {
         encodedResultLbl.setFont(font);
 
         // image
-        // TODO: Take the stored value of the encoded image and substitute below for filePath
-        // TODO: this String needs to be public and static in encoding backend or have accessor method
-        String imgPath = "/Users/trentonlazorchak/Desktop/PrototypeUIEncoder/sampleImg.jpg";
+        String imageName;
+        if(EncodeScreen.isEncImg) {
+            imageName = "encodedImg-" + EncodeScreen.fileName;
+        } else {
+            imageName = "encodedMsg-" + EncodeScreen.fileName;
+        }
 
-        imageIcon = new ImageIcon(imgPath);
+        String imagePath = EncodeScreen.filePath + "/" + imageName;
+
+        imageIcon = new ImageIcon(imagePath);
         Image image = imageIcon.getImage(); // transform it
         Image newImg = image.getScaledInstance(width, height,  Image.SCALE_SMOOTH); // scale it the smooth way
         imageIcon = new ImageIcon(newImg);  // transform it back
@@ -55,6 +58,7 @@ public class EncodeResultScreen extends JFrame {
         JButton save = new JButton("SAVE");
         JButton home = new JButton("HOME");
         JButton encodeAnother = new JButton("ENCODE ANOTHER");
+        JButton decode = new JButton("DECODE");
 
         // Zoom in/out
         JButton zoomIn = new JButton("Zoom In");
@@ -88,18 +92,22 @@ public class EncodeResultScreen extends JFrame {
 
         gc.ipadx = 50;
         gc.ipady = 25;
-        gc.anchor = GridBagConstraints.LINE_END;
+        gc.anchor = GridBagConstraints.CENTER;
         gc.gridx = 0;
         gc.gridy = 2;
         add(save, gc);
 
-        gc.anchor = GridBagConstraints.CENTER;
+        gc.anchor = GridBagConstraints.LINE_START;
         gc.gridx = 1;
         add(home, gc);
 
-        gc.anchor = GridBagConstraints.LINE_START;
-        gc.gridx = 2;
+        gc.anchor = GridBagConstraints.LINE_END;
+        gc.gridx = 1;
         add(encodeAnother, gc);
+
+        gc.anchor = GridBagConstraints.CENTER;
+        gc.gridx = 2;
+        add(decode, gc);
 
         //// Add Behaviors ///////////////////////////////////
         // zoom in pressed
@@ -182,7 +190,6 @@ public class EncodeResultScreen extends JFrame {
                 g2.drawImage(img, 0, 0, null);
                 g2.dispose();
 
-                // TODO: open a file select screen so the user can select where to save the file to
                 //Creating the save option
                 JFileChooser chooser = new JFileChooser();
                 chooser.setFileFilter(new FileNameExtensionFilter("png", "png"));
@@ -199,8 +206,6 @@ public class EncodeResultScreen extends JFrame {
                 }
                 String fileLoc = chooser.getSelectedFile().getAbsolutePath();       //The Location of the file
                 System.out.println(fileLoc);
-
-                // TODO: also give option to save image so it can be replayed
             }
         });
 
@@ -218,8 +223,6 @@ public class EncodeResultScreen extends JFrame {
                 // close encoded result screen
                 setVisible(false);
                 dispose();
-
-                // TODO: set the value of the encoded image variable to null
             }
         });
 
@@ -237,8 +240,23 @@ public class EncodeResultScreen extends JFrame {
                 // close encoded result screen
                 setVisible(false);
                 dispose();
+            }
+        });
 
-                // TODO: set the value of the encoded image variable to null
+        // decode button pressed
+        decode.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // open decode screen
+                JFrame decodeScreen = new DecodeScreen("Decode");
+                decodeScreen.setResizable(false);
+                decodeScreen.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                decodeScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                decodeScreen.setVisible(true);
+
+                // close encoded result screen
+                setVisible(false);
+                dispose();
             }
         });
     }

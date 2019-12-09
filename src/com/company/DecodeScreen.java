@@ -5,9 +5,13 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class DecodeScreen extends JFrame {
     private static boolean isImg = false;
+    public static String decPath;
+    public static String decName;
+    public static String fullDecPath;
     private static JLabel decImg;
 
     public DecodeScreen(String title) {
@@ -19,6 +23,7 @@ public class DecodeScreen extends JFrame {
 
         // fonts
         Font titleFont = new Font("Times New Roman",Font.PLAIN,100);
+        Font errorFont = new Font("Times New Roman", Font.PLAIN, 25);
 
         // create swing components
         JLabel tit = new JLabel("Upload Image To Decode");
@@ -27,6 +32,12 @@ public class DecodeScreen extends JFrame {
         JButton back = new JButton("BACK");
         JButton reset = new JButton("RESET");
         JButton start = new JButton("START");
+
+        JLabel error = new JLabel("ERROR");
+        error.setHorizontalAlignment(JLabel.CENTER);
+        error.setFont(errorFont);
+        error.setForeground(Color.RED);
+        error.setVisible(false);
 
         //// Title and Upload //////////////////////////////////////////////////////////
         gc.weightx = 1;
@@ -43,6 +54,11 @@ public class DecodeScreen extends JFrame {
         gc.gridx = 1;
         gc.gridy = 2;
         add(upload, gc);
+
+        gc.anchor = GridBagConstraints.CENTER;
+        gc.gridx = 1;
+        gc.gridy = 2;
+        add(error, gc);
 
         //// Bottom Row Buttons /////////////////////////////////////////////////////////
         gc.anchor = GridBagConstraints.LAST_LINE_START;
@@ -76,9 +92,12 @@ public class DecodeScreen extends JFrame {
                 if(my.showOpenDialog(null)==JFileChooser.APPROVE_OPTION)
                 {
 
-                    // Store the path to the file to be used for the encoder
-                    String filePath =my.getSelectedFile().getAbsolutePath();
-                    ImageIcon baseImg = new ImageIcon(filePath);
+                    // Store the path to the file to be used for the decoder
+                    decPath =my.getCurrentDirectory().toString();
+                    decName =  my.getSelectedFile().getName();
+                    fullDecPath = decPath + "/" + decName;
+
+                    ImageIcon baseImg = new ImageIcon(fullDecPath);
                     Image image = baseImg.getImage(); // transform it
                     Image newImg = image.getScaledInstance(200, 200,  Image.SCALE_SMOOTH); // scale it the smooth way
                     baseImg = new ImageIcon(newImg);  // transform it back
@@ -126,7 +145,8 @@ public class DecodeScreen extends JFrame {
                     isImg = false;
                 }
 
-                // TODO: set error to invisible
+                // set error to invisible
+                error.setVisible(false);
 
                 revalidate();
             }
@@ -136,24 +156,41 @@ public class DecodeScreen extends JFrame {
         start.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: verify image is correct, is image there, is it encoded
+                // verify image is correct, is image there, is it encoded
+                if(!isImg) {
+                    error.setText("ERROR: MUST UPLOAD AN ENCODED IMAGE");
+                    error.setVisible(true);
+                    revalidate();
+                    return;
+                }
 
-                // TODO: if not there or not encoded, print an error message
+                // check file name contains encodeImg or encodeMsg
+                boolean isEncImg = fullDecPath.contains("encodedImg-");
+                boolean isEncMsg = fullDecPath.contains("encodedMsg-");
+                if(isEncImg || isEncMsg) {
+                    try { // if img is encoded with a message
+                        EncodeMessage.decodeText(fullDecPath);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
 
-                // TODO: if image is encoded, send image to decoding backend
-
-                // transition to decode result screen
-                // Create decode result screen
-                JFrame resultScreen = new DecodeResultScreen("Decode Result");
-                resultScreen.setResizable(false);
-                resultScreen.setExtendedState(JFrame.MAXIMIZED_BOTH);
-                resultScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                resultScreen.setVisible(true);
+                    // transition to decode result screen
+                    // Create decode result screen
+                    JFrame resultScreen = new DecodeResultScreen("Decode Result");
+                    resultScreen.setResizable(false);
+                    resultScreen.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                    resultScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    resultScreen.setVisible(true);
 
 
-                // Close encode screen
-                setVisible(false);
-                dispose();
+                    // Close encode screen
+                    setVisible(false);
+                    dispose();
+               } else {
+                    error.setText("ERROR: UPLOADED IMAGE IS NOT ENCODED!");
+                    error.setVisible(true);
+                    revalidate();
+                }
             }
         });
     }

@@ -2,6 +2,8 @@ package com.company;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class DecodeResultScreen extends JFrame {
     public DecodeResultScreen(String title) {
@@ -18,16 +20,26 @@ public class DecodeResultScreen extends JFrame {
         // create swing components
         JLabel head = new JLabel("Decoded Result");
         head.setFont(titleFont);
-        JLabel orgImgLbl = new JLabel("Original Image: ");
+        //head.setHorizontalAlignment(JLabel.CENTER);
+        JLabel orgImgLbl = new JLabel("Original Image");
         orgImgLbl.setFont(lblFont);
-        JLabel decodedLbl = new JLabel("Decoded msg/img: "); // TODO: the text of this label changes based on whether image or msg is displayed
+
+        JLabel decodedLbl = new JLabel();
+        boolean isEncImg = DecodeScreen.fullDecPath.contains("encodedImg-");
+        boolean isEncMsg = DecodeScreen.fullDecPath.contains("encodedMsg-");
+        // set label based on whether encoded by image or message
+        if(isEncImg) {
+            decodedLbl.setText("Decoded image");
+        } else if(isEncMsg) {
+            decodedLbl.setText("Decoded message");
+        } else {
+            decodedLbl.setText("Decoded msg/img");
+        }
         decodedLbl.setFont(lblFont);
-        // TODO: the paths to the images need to be found using the decoding backend and replaced for these variables
-        String imgPath = "/Users/trentonlazorchak/Desktop/PrototypeUIEncoder/sampleImg.jpg";
-        String decPath = "/Users/trentonlazorchak/Desktop/PrototypeUIEncoder/sampleImg.jpg";
+
         // TODO: there should be an if/else for whether to display an img as decoded or msg
         // base image
-        ImageIcon baseIcon = new ImageIcon(imgPath);
+        ImageIcon baseIcon = new ImageIcon(DecodeScreen.fullDecPath);
         Image image = baseIcon.getImage(); // transform it
         Image newImg = image.getScaledInstance(200, 200,  Image.SCALE_SMOOTH); // scale it the smooth way
         baseIcon = new ImageIcon(newImg);  // transform it back
@@ -38,7 +50,7 @@ public class DecodeResultScreen extends JFrame {
         baseImg.setPreferredSize(size);
         baseImg.setMaximumSize(size);
         // decoded image
-        ImageIcon decIcon = new ImageIcon(imgPath);
+        ImageIcon decIcon = new ImageIcon(DecodeScreen.fullDecPath);
         Image decImage = decIcon.getImage(); // transform it
         Image newerImg = decImage.getScaledInstance(200, 200,  Image.SCALE_SMOOTH); // scale it the smooth way
         decIcon = new ImageIcon(newerImg);  // transform it back
@@ -55,13 +67,14 @@ public class DecodeResultScreen extends JFrame {
         decMsg.setMinimumSize(msgSize);
         decMsg.setPreferredSize(msgSize);
         decMsg.setMaximumSize(msgSize);
+        decMsg.setText(EncodeMessage.decMsg);
 
         // buttons
         JButton decAnother = new JButton("DECODE ANOTHER");
         JButton home = new JButton("HOME");
 
         //// Add components to frame //////////////////////////////////////////////////////////////
-        gc.weightx = 1.0;
+        gc.weightx = 1;
         gc.weighty = 1.0;
 
         gc.anchor = GridBagConstraints.CENTER;
@@ -74,24 +87,29 @@ public class DecodeResultScreen extends JFrame {
         gc.gridy = 1;
         add(orgImgLbl, gc);
 
-        gc.anchor = GridBagConstraints.FIRST_LINE_START;
-        gc.gridx = 1;
+        gc.anchor = GridBagConstraints.LINE_END;
+        gc.gridx = 0;
         gc.gridy = 1;
         add(baseImg, gc);
-
-        gc.anchor = GridBagConstraints.FIRST_LINE_END;
-        gc.gridx = 1;
-        gc.gridy = 1;
-        add(decodedLbl, gc);
 
         gc.anchor = GridBagConstraints.FIRST_LINE_START;
         gc.gridx = 2;
         gc.gridy = 1;
-        add(decImg, gc);
+        add(decodedLbl, gc);
+
+        gc.anchor = GridBagConstraints.LINE_START;
+        gc.gridx = 2;
+        gc.gridy = 1;
+        // display decImg if image was encoded with an image, vice versa for decMsg
+        if(isEncImg) {
+            add(decImg, gc);
+        } else if(isEncMsg) {
+            add(decMsg, gc);
+        }
 
         //// Buttons //////////////////////////////////////////////////////////////////////////////
-        gc.ipadx = 25;
-        gc.ipady = 15;
+        gc.ipadx = 50;
+        gc.ipady = 25;
 
         gc.anchor = GridBagConstraints.LINE_START;
         gc.gridx = 1;
@@ -102,5 +120,40 @@ public class DecodeResultScreen extends JFrame {
         gc.gridx = 1;
         gc.gridy = 2;
         add(home, gc);
+
+        //// Add Behaviors /////////////////////////////////////////////////////////////////////////
+        // if decAnother button is pressed
+        decAnother.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // open decode screen
+                JFrame decode = new DecodeScreen("Decode");
+                decode.setResizable(false);
+                decode.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                decode.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                decode.setVisible(true);
+
+                // close encoded result screen
+                setVisible(false);
+                dispose();
+            }
+        });
+
+        // if home button pressed
+        home.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // open welcome screen
+                JFrame welcome = new WelcomeFrame("ImageEncoder");
+                welcome.setResizable(false);
+                welcome.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                welcome.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                welcome.setVisible(true);
+
+                // close decode result screen
+                setVisible(false);
+                dispose();
+            }
+        });
     }
 }

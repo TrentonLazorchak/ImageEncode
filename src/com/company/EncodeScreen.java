@@ -8,20 +8,29 @@ import javax.swing.text.DefaultStyledDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.logging.Logger;
 
 public class EncodeScreen extends JFrame {
-    public static String name;
     public static String filePath;
+    public static String fileName;
+    public static String fullFilePath;
+
     public static String imgPath;
+    public static String imgName;
+    public static String fullImgPath;
+
     public static String msg;
     public static JLabel encImg;
     public static JLabel img2;
     private boolean isImg = false;
-    private boolean isEncImg = false;
+    public static boolean isEncImg = false;
 
     public EncodeScreen(String title) {
         super(title);
 
+        // set logger
+        Logger LOGGER = Main.LOGGER;
         // set layout manager
         setLayout(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
@@ -29,47 +38,40 @@ public class EncodeScreen extends JFrame {
         final String fileDefault = "<File Name>";
         final String messageDefault = "<Message>";
 
-        // Default font
-        Font font = new Font("Times New Roman",Font.PLAIN,25);
+        // fonts
+        Font titFont = new Font("Times New Roman",Font.PLAIN,50);
+        Font selFont = new Font("Times New Roman", Font.PLAIN, 25);
 
         //// First row /////////////////////////////////////////////
         // create swing components
-        JLabel uploadLabel = new JLabel("Upload Base Image:");
-        uploadLabel.setFont(font);
+        JLabel uploadLabel = new JLabel("Upload Base Image");
+        uploadLabel.setFont(titFont);
 
         JButton upload = new JButton("UPLOAD");
 
-        gc.weightx = 1;
-        gc.weighty = 0.5;
+        JLabel select = new JLabel("Select Encoding Method");
+        select.setFont(selFont);
+        select.setHorizontalAlignment(JLabel.CENTER);
 
-        gc.anchor = GridBagConstraints.CENTER;
-        gc.gridx = 0;
+        gc.weightx = 1;
+        gc.weighty = 1;
+
+        gc.anchor = GridBagConstraints.PAGE_START;
+        gc.gridx = 1;
         gc.gridy = 0;
         add(uploadLabel, gc);
 
-
-        gc.gridx = 2;
+        gc.anchor = GridBagConstraints.PAGE_END;
+        gc.gridx = 1;
         gc.gridy = 0;
         gc.ipadx = 75;
         gc.ipady = 25;
         add(upload, gc);
 
-        //// Second row ///////////////////////////////////////////////////
-        // Create components
-        JLabel selectMethod = new JLabel("Select Method:");
-        // TODO: Need to put the actual methods instead of placeholder names
-        String[] methods = {"Method 1", "Method 2", "Method 3"};
-        JComboBox<String> methodBox = new JComboBox<String>(methods);
-
-        gc.anchor = GridBagConstraints.PAGE_END;
-        gc.gridx = 0;
-        gc.gridy = 0;
-        add(selectMethod, gc);
-
-        gc.anchor = GridBagConstraints.LAST_LINE_START;
+        gc.anchor = GridBagConstraints.PAGE_START;
         gc.gridx = 1;
-        gc.gridy = 0;
-        add(methodBox, gc);
+        gc.gridy = 1;
+        add(select, gc);
 
         //// Encode Message /////////////////////////////////////////////////
         JRadioButton imageRadio = new JRadioButton("Enocde Image");
@@ -78,25 +80,25 @@ public class EncodeScreen extends JFrame {
         radios.add(imageRadio);
         radios.add(textRadio);
 
-        gc.anchor = GridBagConstraints.FIRST_LINE_START;
+        gc.anchor = GridBagConstraints.LINE_START;
         gc.gridx = 1;
         gc.gridy = 1;
         add(textRadio, gc);
         textRadio.setSelected(true); // starts the screen of with textRadio selected
 
-        gc.anchor = GridBagConstraints.FIRST_LINE_END;
+        gc.anchor = GridBagConstraints.LINE_END;
         gc.gridx = 1;
         gc.gridy = 1;
         add(imageRadio, gc);
 
         // Error label (starts invisible)
         JLabel error = new JLabel("ERROR");
-        error.setFont(font);
+        error.setFont(selFont);
         error.setForeground(Color.RED);
         error.setVisible(false);
-        gc.anchor = GridBagConstraints.LAST_LINE_END;
+        gc.anchor = GridBagConstraints.FIRST_LINE_END;
         gc.gridx = 1;
-        gc.gridy = 1;
+        gc.gridy = 2;
         add(error, gc);
 
         // Text items
@@ -127,7 +129,7 @@ public class EncodeScreen extends JFrame {
         scrollPane.setMaximumSize(scrollSize);
 
         gc.fill = GridBagConstraints.HORIZONTAL;
-        gc.anchor = GridBagConstraints.CENTER;
+        gc.anchor = GridBagConstraints.PAGE_END;
         gc.gridx = 1;
         gc.gridy = 1;
         add(scrollPane, gc);
@@ -139,12 +141,10 @@ public class EncodeScreen extends JFrame {
 
         // Cancel button
         JButton cancel = new JButton("CANCEL");
-        gc.anchor = GridBagConstraints.LAST_LINE_START;
+        gc.anchor = GridBagConstraints.LINE_START;
         gc.gridx = 1;
-        gc.gridy = 1;
+        gc.gridy = 2;
         add(cancel, gc);
-
-
 
         //// Buttom row buttons /////////////////////////////////////////////
         // Create buttons
@@ -170,11 +170,14 @@ public class EncodeScreen extends JFrame {
         gc.gridy = 2;
         add(start, gc);
 
+        LOGGER.info("Encoding screen created.");
+
         //// Add behaviors ///////////////////////////////////////////////////
         // If upload button pressed
         upload.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                LOGGER.info("Base image upload button pressed.");
                 JFileChooser my = new JFileChooser();
                 my.setAcceptAllFileFilterUsed(false);
                 FileNameExtensionFilter correct = new FileNameExtensionFilter("png or jpg", "jpg", "png");
@@ -185,10 +188,13 @@ public class EncodeScreen extends JFrame {
 
                 if(my.showOpenDialog(null)==JFileChooser.APPROVE_OPTION)
                 {
-
+                    LOGGER.info("Base image selected.");
                     // Store the path to the file to be used for the encoder
-                    filePath =my.getSelectedFile().getAbsolutePath();
-                    ImageIcon baseImg = new ImageIcon(filePath);
+                    filePath =my.getCurrentDirectory().toString();
+                    fileName =  my.getSelectedFile().getName();
+                    fullFilePath = filePath + "/" + fileName;
+
+                    ImageIcon baseImg = new ImageIcon(filePath + "/" + fileName);
                     Image image = baseImg.getImage(); // transform it
                     Image newImg = image.getScaledInstance(200, 200,  Image.SCALE_SMOOTH); // scale it the smooth way
                     baseImg = new ImageIcon(newImg);  // transform it back
@@ -204,8 +210,10 @@ public class EncodeScreen extends JFrame {
                     gc.gridy = 0;
                     add(encImg, gc);
                     isImg = true;
+                    LOGGER.info("Base image displayed on screen.");
                 }
                 revalidate();
+                LOGGER.info("Frame revalidated.");
             }
         });
 
@@ -213,6 +221,7 @@ public class EncodeScreen extends JFrame {
         upl.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                LOGGER.info("Encode image upload button pressed.");
                 JFileChooser my = new JFileChooser();
                 my.setAcceptAllFileFilterUsed(false);
                 FileNameExtensionFilter correct = new FileNameExtensionFilter("png or jpg", "jpg", "png");
@@ -223,10 +232,14 @@ public class EncodeScreen extends JFrame {
 
                 if(my.showOpenDialog(null)==JFileChooser.APPROVE_OPTION)
                 {
+                    LOGGER.info("Image to be encoded selected.");
                     // Store the path to the file to be used for the encoder
-                    imgPath =my.getSelectedFile().getAbsolutePath();
+                    imgPath =my.getCurrentDirectory().toString();
+                    imgName =  my.getName(my.getSelectedFile().getAbsoluteFile());
+                    fullImgPath = imgPath + "/" + imgName;
+                    System.out.println(fullImgPath);
 
-                    ImageIcon baseImg = new ImageIcon(imgPath);
+                    ImageIcon baseImg = new ImageIcon(fullImgPath);
                     Image image = baseImg.getImage(); // transform it
                     Image newImg = image.getScaledInstance(300, 300,  Image.SCALE_SMOOTH); // scale it the smooth way
                     baseImg = new ImageIcon(newImg);  // transform it back
@@ -237,13 +250,15 @@ public class EncodeScreen extends JFrame {
                     img2.setPreferredSize(size);
                     img2.setMaximumSize(size);
 
-                    gc.anchor = GridBagConstraints.LINE_START;
+                    gc.anchor = GridBagConstraints.PAGE_END;
                     gc.gridx = 1;
                     gc.gridy = 1;
                     add(img2, gc);
                     isEncImg = true;
+                    LOGGER.info("Image to be encoded displayed on screen.");
                 }
                 revalidate();
+                LOGGER.info("Frame revalidated.");
             }
         });
 
@@ -251,16 +266,23 @@ public class EncodeScreen extends JFrame {
         cancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                LOGGER.info("Cancel button pressed");
                 // if text radio selected, set message to default, else remove the image
                 if(textRadio.isSelected()) {
+                    LOGGER.info("Text radio button is selected and the cancel button was pressed, " +
+                            "so setting message text to default");
                     message.setText(messageDefault);
                 } else if(imageRadio.isSelected() && isEncImg){
+                    LOGGER.info("Image radio button is selected and the cancel button was pressed, " +
+                            "so removing the image to be encoded.");
                     remove(img2);
                     isEncImg = false;
                 }
                 // set error to invible
+                LOGGER.info("Removing error label.");
                 error.setVisible(false);
                 revalidate();
+                LOGGER.info("Frame was revalidated");
             }
         });
 
@@ -269,7 +291,9 @@ public class EncodeScreen extends JFrame {
         back.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                LOGGER.info("Back button pressed.");
                 // Open welcome screen
+                LOGGER.info("Opening welcome screen.");
                 JFrame welcome = new WelcomeFrame("ImageEncoder");
                 welcome.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 welcome.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -278,6 +302,7 @@ public class EncodeScreen extends JFrame {
                 // Remove encode screen
                 setVisible(false);
                 dispose();
+                LOGGER.info("Encode screen removed.");
             }
         });
 
@@ -285,6 +310,7 @@ public class EncodeScreen extends JFrame {
         reset.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                LOGGER.info("Reset button pressed.");
                 // remove base image
                 if(isImg) {
                     remove(encImg);
@@ -293,8 +319,12 @@ public class EncodeScreen extends JFrame {
 
                 // if text radio selected, set message to default, else remove the image
                 if(textRadio.isSelected()) {
+                    LOGGER.info("Reset button was pressed and text radio button is selected, " +
+                            "so setting message text to default.");
                     message.setText(messageDefault);
                 } else if(imageRadio.isSelected() && isEncImg){
+                    LOGGER.info("Reset button was pressed and text radio button is selected, " +
+                            "so removing image to be encoded.");
                     remove(img2);
                     isEncImg = false;
                 }
@@ -302,6 +332,7 @@ public class EncodeScreen extends JFrame {
                 // set error label to invisible
                 error.setVisible(false);
                 revalidate();
+                LOGGER.info("Frame revalidated.");
             }
         });
 
@@ -309,21 +340,25 @@ public class EncodeScreen extends JFrame {
         start.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: display a JLabel representing the error
+                LOGGER.info("Start button pressed.");
                 if(!isImg) { // if there is no base image uploaded
-                    System.out.println("ERROR: NO BASE IMAGE SELECTED!");
+                    LOGGER.info("Error starting encoding: no base image uploaded.");
+                    LOGGER.info("Revalidating frame and and showing error message.");
                     error.setText("ERROR: NO BASE IMAGE SELECTED!");
                     error.setVisible(true);
                     revalidate();
+
                     return;
                 } else if (imageRadio.isSelected() && !isEncImg) { // if the image radio button is selected but there is no img
-                    System.out.println("ERROR: NO IMAGE SELECTED!");
+                    LOGGER.info("Error starting encoding: image radio button selected, but no image uploaded.");
+                    LOGGER.info("Revalidating frame and and showing error message.");
                     error.setText("ERROR: NO IMAGE SELECTED!");
                     error.setVisible(true);
                     revalidate();
                     return;
                 } else if (textRadio.isSelected() && message.getText().equals(messageDefault)) { // if text radio is selected and message is the default
-                    System.out.println("ERROR: NO MESSAGE ENTERED!");
+                    LOGGER.info("Error starting encoding: text radio button is selected, but message is default.");
+                    LOGGER.info("Revalidating frame and and showing error message.");
                     error.setText("ERROR: NO MESSAGE ENTERED!");
                     error.setVisible(true);
                     revalidate();
@@ -332,9 +367,11 @@ public class EncodeScreen extends JFrame {
 
                 // if the textRadio is selected, store the message for encoding
                 if(textRadio.isSelected()) {
-                    msg = message.getText();
+                    msg = message.getText() + ">q<";
                     // if the length of the message is greater than 500, print an error
                     if(msg.length() > 500) {
+                        LOGGER.info("Error starting encoding: no base image uploaded.");
+                        LOGGER.info("Revalidating frame and and showing error message.");
                         System.out.println("ERROR: MESSAGE OVER 500 CHARACTERS!");
                         error.setText("ERROR: MESSAGE OVER 500 CHARACTERS!");
                         error.setVisible(true);
@@ -349,7 +386,21 @@ public class EncodeScreen extends JFrame {
                     }
                 }
 
-                // TODO: perform encoding backend (Jake)
+                // backend for encoding a message or an image
+                if(textRadio.isSelected()) { // if a message is requested to be encoded
+                    try {
+                        EncodeMessage.encodeText(fullFilePath, msg);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                } else {
+                    // if imageRadioSelected then go through ImageEncode backend
+                    try {
+                        EncodeImage.encodeImage(fullFilePath, fullImgPath);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
 
                 // Create encode result screen
                 JFrame resultScreen = new EncodeResultScreen("Encode Result");
@@ -380,9 +431,9 @@ public class EncodeScreen extends JFrame {
 
                 // add image items
                 gc.fill = GridBagConstraints.NONE;
-                gc.anchor = GridBagConstraints.LINE_END;
+                gc.anchor = GridBagConstraints.PAGE_START;
                 gc.gridx = 1;
-                gc.gridy = 1;
+                gc.gridy = 2;
                 add(upl, gc);
                 revalidate();
             }
@@ -407,7 +458,7 @@ public class EncodeScreen extends JFrame {
 
                 // add message items
                 gc.fill = GridBagConstraints.HORIZONTAL;
-                gc.anchor = GridBagConstraints.CENTER;
+                gc.anchor = GridBagConstraints.PAGE_END;
                 gc.gridx = 1;
                 gc.gridy = 1;
                 add(scrollPane, gc);

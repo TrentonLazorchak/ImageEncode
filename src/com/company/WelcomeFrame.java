@@ -34,8 +34,9 @@ public class WelcomeFrame extends JFrame {
         JButton replay = new JButton("Replay");
         replay.setFont(btnFont);
 
-        JLabel credit = new JLabel("<html><center>Created by Trenton Lazorchak, Jake Howell, and Olanrewaju Arbisala.</center></html>");
+        JLabel credit = new JLabel("Created by Trenton Lazorchak, Jake Howell, and Olanrewaju Arbisala.");
         credit.setFont(creditFont);
+        credit.setHorizontalAlignment(JLabel.CENTER);
 
         // add Swing components to the gui
         //// Title /////////////////////////////////////////
