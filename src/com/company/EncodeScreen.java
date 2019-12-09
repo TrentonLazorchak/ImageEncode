@@ -9,7 +9,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 public class EncodeScreen extends JFrame {
     public static String filePath;
@@ -29,8 +28,6 @@ public class EncodeScreen extends JFrame {
     public EncodeScreen(String title) {
         super(title);
 
-        // set logger
-        Logger LOGGER = Main.LOGGER;
         // set layout manager
         setLayout(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
@@ -170,17 +167,17 @@ public class EncodeScreen extends JFrame {
         gc.gridy = 2;
         add(start, gc);
 
-        LOGGER.info("Encoding screen created.");
+        Log.LOGGER.info("Encoding screen created.");
 
         //// Add behaviors ///////////////////////////////////////////////////
         // If upload button pressed
         upload.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                LOGGER.info("Base image upload button pressed.");
+                Log.LOGGER.info("Base image upload button pressed.");
                 JFileChooser my = new JFileChooser();
                 my.setAcceptAllFileFilterUsed(false);
-                FileNameExtensionFilter correct = new FileNameExtensionFilter("png or jpg", "jpg", "png");
+                FileNameExtensionFilter correct = new FileNameExtensionFilter("png",  "png");
                 my.addChoosableFileFilter(correct);
                 my.setCurrentDirectory(new java.io.File("."));
                 my.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
@@ -188,7 +185,7 @@ public class EncodeScreen extends JFrame {
 
                 if(my.showOpenDialog(null)==JFileChooser.APPROVE_OPTION)
                 {
-                    LOGGER.info("Base image selected.");
+                    Log.LOGGER.info("Base image selected.");
                     // Store the path to the file to be used for the encoder
                     filePath =my.getCurrentDirectory().toString();
                     fileName =  my.getSelectedFile().getName();
@@ -210,10 +207,10 @@ public class EncodeScreen extends JFrame {
                     gc.gridy = 0;
                     add(encImg, gc);
                     isImg = true;
-                    LOGGER.info("Base image displayed on screen.");
+                    Log.LOGGER.info("Base image displayed on screen.");
                 }
                 revalidate();
-                LOGGER.info("Frame revalidated.");
+                Log.LOGGER.info("Frame revalidated.");
             }
         });
 
@@ -221,7 +218,7 @@ public class EncodeScreen extends JFrame {
         upl.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                LOGGER.info("Encode image upload button pressed.");
+                Log.LOGGER.info("Encode image upload button pressed.");
                 JFileChooser my = new JFileChooser();
                 my.setAcceptAllFileFilterUsed(false);
                 FileNameExtensionFilter correct = new FileNameExtensionFilter("png or jpg", "jpg", "png");
@@ -232,7 +229,7 @@ public class EncodeScreen extends JFrame {
 
                 if(my.showOpenDialog(null)==JFileChooser.APPROVE_OPTION)
                 {
-                    LOGGER.info("Image to be encoded selected.");
+                    Log.LOGGER.info("Image to be encoded selected.");
                     // Store the path to the file to be used for the encoder
                     imgPath =my.getCurrentDirectory().toString();
                     imgName =  my.getName(my.getSelectedFile().getAbsoluteFile());
@@ -255,10 +252,10 @@ public class EncodeScreen extends JFrame {
                     gc.gridy = 1;
                     add(img2, gc);
                     isEncImg = true;
-                    LOGGER.info("Image to be encoded displayed on screen.");
+                    Log.LOGGER.info("Image to be encoded displayed on screen.");
                 }
                 revalidate();
-                LOGGER.info("Frame revalidated.");
+                Log.LOGGER.info("Frame revalidated.");
             }
         });
 
@@ -266,23 +263,23 @@ public class EncodeScreen extends JFrame {
         cancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                LOGGER.info("Cancel button pressed");
+                Log.LOGGER.info("Cancel button pressed");
                 // if text radio selected, set message to default, else remove the image
                 if(textRadio.isSelected()) {
-                    LOGGER.info("Text radio button is selected and the cancel button was pressed, " +
+                    Log.LOGGER.info("Text radio button is selected and the cancel button was pressed, " +
                             "so setting message text to default");
                     message.setText(messageDefault);
                 } else if(imageRadio.isSelected() && isEncImg){
-                    LOGGER.info("Image radio button is selected and the cancel button was pressed, " +
+                    Log.LOGGER.info("Image radio button is selected and the cancel button was pressed, " +
                             "so removing the image to be encoded.");
                     remove(img2);
                     isEncImg = false;
                 }
                 // set error to invible
-                LOGGER.info("Removing error label.");
+                Log.LOGGER.info("Removing error label.");
                 error.setVisible(false);
                 revalidate();
-                LOGGER.info("Frame was revalidated");
+                Log.LOGGER.info("Frame was revalidated");
             }
         });
 
@@ -291,9 +288,9 @@ public class EncodeScreen extends JFrame {
         back.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                LOGGER.info("Back button pressed.");
+                Log.LOGGER.info("Back button pressed.");
                 // Open welcome screen
-                LOGGER.info("Opening welcome screen.");
+                Log.LOGGER.info("Opening welcome screen.");
                 JFrame welcome = new WelcomeFrame("ImageEncoder");
                 welcome.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 welcome.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -302,7 +299,7 @@ public class EncodeScreen extends JFrame {
                 // Remove encode screen
                 setVisible(false);
                 dispose();
-                LOGGER.info("Encode screen removed.");
+                Log.LOGGER.info("Encode screen removed.");
             }
         });
 
@@ -310,7 +307,7 @@ public class EncodeScreen extends JFrame {
         reset.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                LOGGER.info("Reset button pressed.");
+                Log.LOGGER.info("Reset button pressed.");
                 // remove base image
                 if(isImg) {
                     remove(encImg);
@@ -319,11 +316,11 @@ public class EncodeScreen extends JFrame {
 
                 // if text radio selected, set message to default, else remove the image
                 if(textRadio.isSelected()) {
-                    LOGGER.info("Reset button was pressed and text radio button is selected, " +
+                    Log.LOGGER.info("Reset button was pressed and text radio button is selected, " +
                             "so setting message text to default.");
                     message.setText(messageDefault);
                 } else if(imageRadio.isSelected() && isEncImg){
-                    LOGGER.info("Reset button was pressed and text radio button is selected, " +
+                    Log.LOGGER.info("Reset button was pressed and text radio button is selected, " +
                             "so removing image to be encoded.");
                     remove(img2);
                     isEncImg = false;
@@ -332,7 +329,7 @@ public class EncodeScreen extends JFrame {
                 // set error label to invisible
                 error.setVisible(false);
                 revalidate();
-                LOGGER.info("Frame revalidated.");
+                Log.LOGGER.info("Frame revalidated.");
             }
         });
 
@@ -340,25 +337,25 @@ public class EncodeScreen extends JFrame {
         start.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                LOGGER.info("Start button pressed.");
+                Log.LOGGER.info("Start button pressed.");
                 if(!isImg) { // if there is no base image uploaded
-                    LOGGER.info("Error starting encoding: no base image uploaded.");
-                    LOGGER.info("Revalidating frame and and showing error message.");
+                    Log.LOGGER.info("Error starting encoding: no base image uploaded.");
+                    Log.LOGGER.info("Revalidating frame and and showing error message.");
                     error.setText("ERROR: NO BASE IMAGE SELECTED!");
                     error.setVisible(true);
                     revalidate();
 
                     return;
                 } else if (imageRadio.isSelected() && !isEncImg) { // if the image radio button is selected but there is no img
-                    LOGGER.info("Error starting encoding: image radio button selected, but no image uploaded.");
-                    LOGGER.info("Revalidating frame and and showing error message.");
+                    Log.LOGGER.info("Error starting encoding: image radio button selected, but no image uploaded.");
+                    Log.LOGGER.info("Revalidating frame and and showing error message.");
                     error.setText("ERROR: NO IMAGE SELECTED!");
                     error.setVisible(true);
                     revalidate();
                     return;
                 } else if (textRadio.isSelected() && message.getText().equals(messageDefault)) { // if text radio is selected and message is the default
-                    LOGGER.info("Error starting encoding: text radio button is selected, but message is default.");
-                    LOGGER.info("Revalidating frame and and showing error message.");
+                    Log.LOGGER.info("Error starting encoding: text radio button is selected, but message is default.");
+                    Log.LOGGER.info("Revalidating frame and and showing error message.");
                     error.setText("ERROR: NO MESSAGE ENTERED!");
                     error.setVisible(true);
                     revalidate();
@@ -370,15 +367,15 @@ public class EncodeScreen extends JFrame {
                     msg = message.getText() + ">q<";
                     // if the length of the message is greater than 500, print an error
                     if(msg.length() > 500) {
-                        LOGGER.info("Error starting encoding: no base image uploaded.");
-                        LOGGER.info("Revalidating frame and and showing error message.");
-                        System.out.println("ERROR: MESSAGE OVER 500 CHARACTERS!");
+                        Log.LOGGER.info("Error starting encoding: no base image uploaded.");
+                        Log.LOGGER.info("Revalidating frame and and showing error message.");
                         error.setText("ERROR: MESSAGE OVER 500 CHARACTERS!");
                         error.setVisible(true);
                         revalidate();
                         return;
                     } else if(msg.isEmpty()) { // if the message is empty, print an error
-                        System.out.println("ERROR: MESSAGE EMPTY!");
+                        Log.LOGGER.info("Error starting encoding: no base image uploaded.");
+                        Log.LOGGER.info("Revalidating frame and and showing error message.");
                         error.setText("ERROR: MESSAGE EMPTY!");
                         error.setVisible(true);
                         revalidate();
@@ -389,6 +386,7 @@ public class EncodeScreen extends JFrame {
                 // backend for encoding a message or an image
                 if(textRadio.isSelected()) { // if a message is requested to be encoded
                     try {
+                        Log.LOGGER.info("Encoding message to base image.");
                         EncodeMessage.encodeText(fullFilePath, msg);
                     } catch (IOException ex) {
                         ex.printStackTrace();
@@ -396,6 +394,7 @@ public class EncodeScreen extends JFrame {
                 } else {
                     // if imageRadioSelected then go through ImageEncode backend
                     try {
+                        Log.LOGGER.info("Encoding image to base image");
                         EncodeImage.encodeImage(fullFilePath, fullImgPath);
                     } catch (IOException ex) {
                         ex.printStackTrace();
@@ -420,6 +419,7 @@ public class EncodeScreen extends JFrame {
         imageRadio.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Log.LOGGER.info("Image radio button selected.");
                 // set error visible to false
                 error.setVisible(false);
 
@@ -436,6 +436,9 @@ public class EncodeScreen extends JFrame {
                 gc.gridy = 2;
                 add(upl, gc);
                 revalidate();
+
+                Log.LOGGER.info("Text items hidden, image upload button presented to screen.");
+                Log.LOGGER.info("Revalidated screen.");
             }
         });
 
@@ -443,6 +446,7 @@ public class EncodeScreen extends JFrame {
         textRadio.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Log.LOGGER.info("Text radio button selected.");
                 // error to invisible
                 error.setVisible(false);
 
@@ -463,6 +467,9 @@ public class EncodeScreen extends JFrame {
                 gc.gridy = 1;
                 add(scrollPane, gc);
                 revalidate();
+
+                Log.LOGGER.info("Image items hidden, message box presented to screen.");
+                Log.LOGGER.info("Revalidated screen.");
             }
         });
     }

@@ -81,6 +81,7 @@ public class DecodeScreen extends JFrame {
         upload.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Log.LOGGER.info("Upload button pressed.");
                 JFileChooser my = new JFileChooser();
                 my.setAcceptAllFileFilterUsed(false);
                 FileNameExtensionFilter correct = new FileNameExtensionFilter("png or jpg", "jpg", "png");
@@ -113,8 +114,10 @@ public class DecodeScreen extends JFrame {
                     gc.gridy = 1;
                     add(decImg, gc);
                     isImg = true;
+                    Log.LOGGER.info("Image selected and presented to the screen.");
                 }
                 revalidate();
+                Log.LOGGER.info("Revalidated screen.");
             }
         });
 
@@ -122,15 +125,18 @@ public class DecodeScreen extends JFrame {
         back.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Log.LOGGER.info("Back button pressed.");
                 // Open welcome screen
                 JFrame welcome = new WelcomeFrame("ImageEncoder");
                 welcome.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 welcome.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 welcome.setVisible(true);
+                Log.LOGGER.info("Welcome screen created.");
 
                 // Remove decode screen
                 setVisible(false);
                 dispose();
+                Log.LOGGER.info("Disposed of the decode screen.");
             }
         });
 
@@ -138,17 +144,22 @@ public class DecodeScreen extends JFrame {
         reset.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Log.LOGGER.info("Reset button pressed.");
                 // if an image has been uploaded
                 if(isImg) {
                     // remove the decoded image from the screen
                     remove(decImg);
                     isImg = false;
+                    Log.LOGGER.info("Image removed from the screen.");
+                } else {
+                    Log.LOGGER.info("No image was on the screen when reset was pressed.");
                 }
 
                 // set error to invisible
                 error.setVisible(false);
 
                 revalidate();
+                Log.LOGGER.info("Error removed and screen revalidated.");
             }
         });
 
@@ -156,20 +167,23 @@ public class DecodeScreen extends JFrame {
         start.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Log.LOGGER.info("Start button pressed.");
                 // verify image is correct, is image there, is it encoded
                 if(!isImg) {
                     error.setText("ERROR: MUST UPLOAD AN ENCODED IMAGE");
                     error.setVisible(true);
                     revalidate();
+                    Log.LOGGER.info("ERROR: Must upload an encoded image in order to decode.");
                     return;
                 }
 
                 // check file name contains encodeImg or encodeMsg
                 boolean isEncImg = fullDecPath.contains("encodedImg-");
                 boolean isEncMsg = fullDecPath.contains("encodedMsg-");
-                if(isEncImg || isEncMsg) {
-                    try { // if img is encoded with a message
+                if(isEncMsg) { // if img is encoded with a message
+                    try {
                         EncodeMessage.decodeText(fullDecPath);
+                        Log.LOGGER.info("Message decoded from image.");
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
@@ -181,15 +195,39 @@ public class DecodeScreen extends JFrame {
                     resultScreen.setExtendedState(JFrame.MAXIMIZED_BOTH);
                     resultScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                     resultScreen.setVisible(true);
-
+                    Log.LOGGER.info("Decode result screen created.");
 
                     // Close encode screen
                     setVisible(false);
                     dispose();
-               } else {
+                    Log.LOGGER.info("Encode screen disposed of.");
+               } else if(isEncImg) { // if img is encoded with a image
+                    try {
+                        //EncodeImage.decodeImage(fullDecPath); //TODO: Replace decode message with decode image
+                        EncodeMessage.decodeText(fullDecPath);
+                        Log.LOGGER.info("Image decoded from image.");
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+
+                    // transition to decode result screen
+                    // Create decode result screen
+                    JFrame resultScreen = new DecodeResultScreen("Decode Result");
+                    resultScreen.setResizable(false);
+                    resultScreen.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                    resultScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    resultScreen.setVisible(true);
+                    Log.LOGGER.info("Decode result screen created.");
+
+                    // Close encode screen
+                    setVisible(false);
+                    dispose();
+                    Log.LOGGER.info("Encode screen disposed of.");
+                } else {
                     error.setText("ERROR: UPLOADED IMAGE IS NOT ENCODED!");
                     error.setVisible(true);
                     revalidate();
+                    Log.LOGGER.info("ERROR: Uploaded image is not encoded.");
                 }
             }
         });

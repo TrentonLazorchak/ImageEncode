@@ -64,9 +64,9 @@ public class EncodeImage {
             String imageName = "encodedImg-" + EncodeScreen.fileName;
             String imagePath = EncodeScreen.filePath + "/" + imageName;
             File outputfile = new File(imagePath);
-            ImageIO.write(imageC, "jpg", outputfile);
+            ImageIO.write(imageC, "png", outputfile);
+            Log.LOGGER.info("Encoded image and wrote encoded image to new file: " + imagePath);
         } catch (IOException e) {
-            // TODO: LOGGER.info(e)
             e.printStackTrace();
         }
         return imageC;

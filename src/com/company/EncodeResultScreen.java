@@ -114,15 +114,19 @@ public class EncodeResultScreen extends JFrame {
         zoomIn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Log.LOGGER.info("Zoom in pressed.");
+
                 // remove existing img
                 remove(img);
 
                 if(width >= 1000 || height >= 1000) {
+                    Log.LOGGER.info("ERROR: Max zoom for image reached.");
                     return;
                 } else {
                     // adjust height and width
                     height += 50;
                     width += 50;
+                    Log.LOGGER.info("Zooming in image by 50.");
                 }
 
                 // rescale img
@@ -140,6 +144,7 @@ public class EncodeResultScreen extends JFrame {
                 gc.gridy = 1;
                 add(img, gc);
                 revalidate();
+                Log.LOGGER.info("Revalidated screen.");
             }
         });
 
@@ -147,13 +152,16 @@ public class EncodeResultScreen extends JFrame {
         zoomOut.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Log.LOGGER.info("Zoom out pressed.");
                 // if max zoom out reached, don't zoom out
                 if(width <= 500 || height <= 500) {
+                    Log.LOGGER.info("ERROR: Minimum zoom reached.");
                     return;
                 } else {
                     // adjust height and width
                     height -= 50;
                     width -= 50;
+                    Log.LOGGER.info("Zooming out of image by 50.");
                 }
 
                 // remove existing img
@@ -174,6 +182,7 @@ public class EncodeResultScreen extends JFrame {
                 gc.gridy = 1;
                 add(img, gc);
                 revalidate();
+                Log.LOGGER.info("Revalidated screen.");
             }
         });
 
@@ -181,6 +190,7 @@ public class EncodeResultScreen extends JFrame {
         save.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Log.LOGGER.info("Save button pressed.");
                 // create img to save
                 Image img = imageIcon.getImage();
 
@@ -198,14 +208,15 @@ public class EncodeResultScreen extends JFrame {
 
                     try{
                         ImageIO.write(bi, "png", new File(file.getAbsolutePath()));
+                        Log.LOGGER.info("Saved image as png.");
                     } catch (IOException ex){
-                        System.out.println("Failed to save image");
+                        Log.LOGGER.info("ERROR: Failed to save image.");
                     }
                 } else {
-                    System.out.println("no file chosen");
+                    Log.LOGGER.info("No file selected.");
                 }
                 String fileLoc = chooser.getSelectedFile().getAbsolutePath();       //The Location of the file
-                System.out.println(fileLoc);
+                Log.LOGGER.info("Location of file: " + fileLoc);
             }
         });
 
@@ -213,16 +224,19 @@ public class EncodeResultScreen extends JFrame {
         home.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Log.LOGGER.info("Home button pressed.");
                 // open welcome screen
                 JFrame welcome = new WelcomeFrame("ImageEncoder");
                 welcome.setResizable(false);
                 welcome.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 welcome.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 welcome.setVisible(true);
+                Log.LOGGER.info("Opened welcome screen.");
 
                 // close encoded result screen
                 setVisible(false);
                 dispose();
+                Log.LOGGER.info("Disposed of the encoded result screen/");
             }
         });
 
@@ -230,16 +244,19 @@ public class EncodeResultScreen extends JFrame {
         encodeAnother.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Log.LOGGER.info("Encode Another button pressed.");
                 // open encode screen
                 JFrame encodeScreen = new EncodeScreen("Encode");
                 encodeScreen.setResizable(false);
                 encodeScreen.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 encodeScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 encodeScreen.setVisible(true);
+                Log.LOGGER.info("Encode screen opened.");
 
                 // close encoded result screen
                 setVisible(false);
                 dispose();
+                Log.LOGGER.info("Disposed of the encoded result screen.");
             }
         });
 
@@ -247,16 +264,19 @@ public class EncodeResultScreen extends JFrame {
         decode.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Log.LOGGER.info("Decode button pressed.");
                 // open decode screen
                 JFrame decodeScreen = new DecodeScreen("Decode");
                 decodeScreen.setResizable(false);
                 decodeScreen.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 decodeScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 decodeScreen.setVisible(true);
+                Log.LOGGER.info("Decode screen opened.");
 
                 // close encoded result screen
                 setVisible(false);
                 dispose();
+                Log.LOGGER.info("Disposed of the encoded result screen.");
             }
         });
     }

@@ -77,55 +77,61 @@ public class WelcomeFrame extends JFrame {
         // Add behaviors
         // Encode button pressed
         encode.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
+                Log.LOGGER.info("Encode button pressed.");
                 // Create Encode Screen
                 JFrame encodeScreen = new EncodeScreen("Encode");
                 encodeScreen.setResizable(false);
                 encodeScreen.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 encodeScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 encodeScreen.setVisible(true);
+                Log.LOGGER.info("Encode screen created.");
 
                 // Close welcome screen
                 setVisible(false);
                 dispose();
+                Log.LOGGER.info("Disposed of the welcome screen.");
             }
         });
 
         // Decode button pressed
         decode.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
+                Log.LOGGER.info("Decode button pressed.");
                 // Create decode screen
                 JFrame decodeScreen = new DecodeScreen("Decode");
                 decodeScreen.setResizable(false);
                 decodeScreen.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 decodeScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 decodeScreen.setVisible(true);
+                Log.LOGGER.info("Decode screen created.");
 
                 // Close welcome screen
                 setVisible(false);
                 dispose();
+                Log.LOGGER.info("Disposed of the welcome screen.");
             }
         });
 
         // Replay button pressed
         replay.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
+                Log.LOGGER.info("Replay button pressed.");
                 // Create replay screen
                 JFrame replayScreen = new ReplayScreen("Replay");
                 replayScreen.setResizable(false);
                 replayScreen.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 replayScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 replayScreen.setVisible(true);
+                Log.LOGGER.info("Created replay screen.");
 
                 // Close welcome screen
                 setVisible(false);
                 dispose();
+                Log.LOGGER.info("Disposed of the welcome screen.");
             }
         });
     }

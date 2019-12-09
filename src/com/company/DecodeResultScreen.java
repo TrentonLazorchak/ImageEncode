@@ -68,6 +68,12 @@ public class DecodeResultScreen extends JFrame {
         decMsg.setPreferredSize(msgSize);
         decMsg.setMaximumSize(msgSize);
         decMsg.setText(EncodeMessage.decMsg);
+        JScrollPane msgScroll = new JScrollPane(decMsg);
+        Dimension scrollSize = new Dimension(400, 250);
+        msgScroll.setMinimumSize(scrollSize);
+        msgScroll.setPreferredSize(scrollSize);
+        msgScroll.setMaximumSize(scrollSize);
+
 
         // buttons
         JButton decAnother = new JButton("DECODE ANOTHER");
@@ -104,7 +110,7 @@ public class DecodeResultScreen extends JFrame {
         if(isEncImg) {
             add(decImg, gc);
         } else if(isEncMsg) {
-            add(decMsg, gc);
+            add(msgScroll, gc);
         }
 
         //// Buttons //////////////////////////////////////////////////////////////////////////////
@@ -126,16 +132,19 @@ public class DecodeResultScreen extends JFrame {
         decAnother.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Log.LOGGER.info("Decode Another button pressed.");
                 // open decode screen
                 JFrame decode = new DecodeScreen("Decode");
                 decode.setResizable(false);
                 decode.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 decode.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 decode.setVisible(true);
+                Log.LOGGER.info("Decode screen opened.");
 
                 // close encoded result screen
                 setVisible(false);
                 dispose();
+                Log.LOGGER.info("Disposed of encoded result screen.");
             }
         });
 
@@ -143,16 +152,19 @@ public class DecodeResultScreen extends JFrame {
         home.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Log.LOGGER.info("Home button pressed.");
                 // open welcome screen
                 JFrame welcome = new WelcomeFrame("ImageEncoder");
                 welcome.setResizable(false);
                 welcome.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 welcome.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 welcome.setVisible(true);
+                Log.LOGGER.info("Welcome screen opened.");
 
                 // close decode result screen
                 setVisible(false);
                 dispose();
+                Log.LOGGER.info("Disposed of the decode result screen.");
             }
         });
     }

@@ -2,12 +2,13 @@ package com.company;
 
 import javax.swing.*;
 import java.util.logging.Logger;
+// set logger
 
 public class Main {
-    // create a logger variable
-    static final  Logger LOGGER = Logger.getLogger(Main.class.getName());
 
     public static void main(String[] args) {
+
+        Log.setUpLogger();
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -18,8 +19,8 @@ public class Main {
                 welcome.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 welcome.setVisible(true);
 
-                LOGGER.info("Image Encoder app started");
-                LOGGER.info("Welcome Screen Opened");
+                Log.LOGGER.info("Image Encoder app started");
+                Log.LOGGER.info("Welcome Screen Opened");
             }
         });
 
