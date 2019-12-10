@@ -62,13 +62,15 @@ public class ReplayResultScreen extends JFrame {
         // decoded message
         JTextArea decMsg = new JTextArea();
         decMsg.setEditable(false);
-        Dimension msgSize = new Dimension(500, 100);
+        Dimension msgSize = new Dimension(550, 200);
         decMsg.setMinimumSize(msgSize);
         decMsg.setPreferredSize(msgSize);
         decMsg.setMaximumSize(msgSize);
+        decMsg.setWrapStyleWord(true);
+        decMsg.setLineWrap(true);
         decMsg.setText(EncodeMessage.decMsg);
         JScrollPane msgScroll = new JScrollPane(decMsg);
-        Dimension scrollSize = new Dimension(400, 250);
+        Dimension scrollSize = new Dimension(550, 200);
         msgScroll.setMinimumSize(scrollSize);
         msgScroll.setPreferredSize(scrollSize);
         msgScroll.setMaximumSize(scrollSize);
