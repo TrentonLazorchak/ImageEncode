@@ -5,8 +5,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class DecodeResultScreen extends JFrame {
-    public DecodeResultScreen(String title) {
+public class ReplayResultScreen extends JFrame {
+    public ReplayResultScreen(String title) {
         super(title);
 
         // set layout manager
@@ -18,15 +18,15 @@ public class DecodeResultScreen extends JFrame {
         Font lblFont = new Font("Times New Roman", Font.PLAIN, 30);
 
         // create swing components
-        JLabel head = new JLabel("Decoded Result");
-        head.setFont(titleFont);
+        JLabel head = new JLabel("Replay Result");
+            head.setFont(titleFont);
         //head.setHorizontalAlignment(JLabel.CENTER);
         JLabel orgImgLbl = new JLabel("Original Image");
-        orgImgLbl.setFont(lblFont);
+            orgImgLbl.setFont(lblFont);
 
         JLabel decodedLbl = new JLabel();
-        boolean isEncImg = DecodeScreen.fullDecPath.contains("encodedImg-");
-        boolean isEncMsg = DecodeScreen.fullDecPath.contains("encodedMsg-");
+        boolean isEncImg = ReplayScreen.fullReplayPath.contains("encodedImg-");
+        boolean isEncMsg = ReplayScreen.fullReplayPath.contains("encodedMsg-");
         // set label based on whether encoded by image or message
         if(isEncImg) {
             decodedLbl.setText("Decoded image");
@@ -38,7 +38,7 @@ public class DecodeResultScreen extends JFrame {
         decodedLbl.setFont(lblFont);
 
         // base image
-        ImageIcon baseIcon = new ImageIcon(DecodeScreen.fullDecPath);
+        ImageIcon baseIcon = new ImageIcon(ReplayScreen.fullReplayPath);
         Image image = baseIcon.getImage(); // transform it
         Image newImg = image.getScaledInstance(200, 200,  Image.SCALE_SMOOTH); // scale it the smooth way
         baseIcon = new ImageIcon(newImg);  // transform it back
@@ -49,7 +49,7 @@ public class DecodeResultScreen extends JFrame {
         baseImg.setPreferredSize(size);
         baseImg.setMaximumSize(size);
         // decoded image
-        ImageIcon decIcon = new ImageIcon(DecodeScreen.fullDecPath); // TODO: Change this to EncodeImage.blah
+        ImageIcon decIcon = new ImageIcon(ReplayScreen.fullReplayPath); //TODO: Change this to EncodeImage.blah
         Image decImage = decIcon.getImage(); // transform it
         Image newerImg = decImage.getScaledInstance(200, 200,  Image.SCALE_SMOOTH); // scale it the smooth way
         decIcon = new ImageIcon(newerImg);  // transform it back
@@ -75,7 +75,7 @@ public class DecodeResultScreen extends JFrame {
 
 
         // buttons
-        JButton decAnother = new JButton("DECODE ANOTHER");
+        JButton replayAnother = new JButton("REPLAY ANOTHER");
         JButton home = new JButton("HOME");
 
         //// Add components to frame //////////////////////////////////////////////////////////////
@@ -119,7 +119,7 @@ public class DecodeResultScreen extends JFrame {
         gc.anchor = GridBagConstraints.LINE_START;
         gc.gridx = 1;
         gc.gridy = 2;
-        add(decAnother, gc);
+        add(replayAnother, gc);
 
         gc.anchor = GridBagConstraints.LINE_END;
         gc.gridx = 1;
@@ -128,27 +128,27 @@ public class DecodeResultScreen extends JFrame {
 
         //// Add Behaviors /////////////////////////////////////////////////////////////////////////
         // if decAnother button is pressed
-        decAnother.addActionListener(new ActionListener() {
+            replayAnother.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Log.LOGGER.info("Decode Another button pressed.");
-                // open decode screen
-                JFrame decode = new DecodeScreen("Decode");
-                decode.setResizable(false);
-                decode.setExtendedState(JFrame.MAXIMIZED_BOTH);
-                decode.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                decode.setVisible(true);
-                Log.LOGGER.info("Decode screen opened.");
+                // open replay screen
+                JFrame replay = new ReplayScreen("Replay");
+                replay.setResizable(false);
+                replay.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                replay.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                replay.setVisible(true);
+                Log.LOGGER.info("Replay screen opened.");
 
-                // close encoded result screen
+                // close replay result screen
                 setVisible(false);
                 dispose();
-                Log.LOGGER.info("Disposed of encoded result screen.");
+                Log.LOGGER.info("Disposed of replay result screen.");
             }
         });
 
         // if home button pressed
-        home.addActionListener(new ActionListener() {
+            home.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Log.LOGGER.info("Home button pressed.");
@@ -160,11 +160,13 @@ public class DecodeResultScreen extends JFrame {
                 welcome.setVisible(true);
                 Log.LOGGER.info("Welcome screen opened.");
 
-                // close decode result screen
+                // close replayresult screen
                 setVisible(false);
                 dispose();
-                Log.LOGGER.info("Disposed of the decode result screen.");
+                Log.LOGGER.info("Disposed of the replay result screen.");
             }
         });
     }
 }
+
+
